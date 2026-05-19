@@ -1,43 +1,33 @@
-import { Canvas, useFrame } from "@react-three/fiber"
+import { Canvas } from "@react-three/fiber"
 import { OrbitControls } from "@react-three/drei"
-import { useRef } from "react"
-
-function Box() {
-  const boxRef = useRef()
-
-  useFrame(() => {
-    boxRef.current.rotation.y += 0.01
-  })
-
-  return (
-    <mesh ref={boxRef} position={[0,0,0]}>
-      <boxGeometry />
-      <meshStandardMaterial />
-    </mesh>
-  )
-}
+import Car from "./components/Car"
 
 function Ground() {
   return (
-    <mesh rotation={[-Math.PI/2,0,0]} position={[0,-1,0]}>
-      <planeGeometry args={[20,20]} />
-      <meshStandardMaterial />
-    </mesh>
+    <>
+      <mesh rotation={[-Math.PI/2,0,0]} position={[0,-1,0]}>
+        <planeGeometry args={[50,50]} />
+        <meshStandardMaterial color="green" />
+      </mesh>
+
+      <mesh rotation={[-Math.PI/2,0,0]} position={[0,-0.9,0]}>
+        <planeGeometry args={[6,50]} />
+        <meshStandardMaterial color="gray" />
+      </mesh>
+    </>
   )
 }
 
-function App() {
+export default function App() {
   return (
-    <Canvas camera={{ position:[0,3,8] }}>
-      <ambientLight intensity={1}/>
+    <Canvas camera={{ position:[0,4,15] }}>
+      <ambientLight intensity={1.5}/>
       <directionalLight position={[5,5,5]}/>
 
-      <Box />
       <Ground />
+      <Car />
 
       <OrbitControls />
     </Canvas>
   )
 }
-
-export default App
