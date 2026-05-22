@@ -1,75 +1,107 @@
-import { Canvas } from "@react-three/fiber"
-import { OrbitControls } from "@react-three/drei"
-import Car from "./components/Car"
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls } from "@react-three/drei";
+import { useGLTF, Text } from "@react-three/drei";
 
-function Ground() {
+function Car() {
+  const { scene } = useGLTF("/models/car.glb");
+
   return (
-    <>
-      {/* Ground */}
-      <mesh rotation={[-Math.PI/2,0,0]} position={[0,-2,0]}>
-        <planeGeometry args={[80,80]} />
-        <meshStandardMaterial color="#111"/>
-      </mesh>
-
-      {/* Road */}
-      <mesh rotation={[-Math.PI/2,0,0]} position={[0,-1.9,0]}>
-        <planeGeometry args={[10,80]} />
-        <meshStandardMaterial color="#333"/>
-      </mesh>
-
-      {/* Road line */}
-      <mesh rotation={[-Math.PI/2,0,0]} position={[0,-1.8,0]}>
-        <planeGeometry args={[0.3,80]} />
-        <meshStandardMaterial color="white"/>
-      </mesh>
-    </>
-  )
+    <primitive
+      object={scene}
+      scale={1.5}
+      position={[0, 0.5, 0]}
+      rotation={[0, Math.PI, 0]}
+    />
+  );
 }
 
-function Building({x,z,height,color}) {
+function Building({ x, z, height, color, label }) {
   return (
-    <mesh position={[x,height/2-2,z]}>
-      <boxGeometry args={[3,height,3]} />
-      <meshStandardMaterial
-        color={color}
-        emissive={color}
-        emissiveIntensity={0.5}
-      />
-    </mesh>
-  )
+    <group position={[x, height / 2, z]}>
+      <mesh>
+        <boxGeometry args={[2, height, 2]} />
+        <meshStandardMaterial color={color} />
+      </mesh>
+
+      <Text
+        position={[0, height / 2 + 1, 0]}
+        fontSize={0.5}
+        color="white"
+        anchorX="center"
+      >
+        {label}
+      </Text>
+    </group>
+  );
 }
 
 export default function App() {
   return (
-    <Canvas camera={{position:[0,3,10],fov:75}}>
+    <Canvas camera={{ position: [0, 8, 18], fov: 60 }}>
+      
+      {/* Background */}
+      <color attach="background" args={["#0d1117"]} />
 
-      <ambientLight intensity={1}/>
+      {/* Lights */}
+      <ambientLight intensity={2} />
+      <directionalLight position={[5, 10, 5]} intensity={2} />
 
-      <pointLight
-        position={[5,5,5]}
-        intensity={10}
-        color="cyan"
-      />
+      {/* Ground */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]}>
+        <planeGeometry args={[50, 50]} />
+        <meshStandardMaterial color="#1f1f1f" />
+      </mesh>
 
-      <pointLight
-        position={[-5,5,5]}
-        intensity={10}
-        color="purple"
-      />
+      {/* Road */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
+        <planeGeometry args={[6, 50]} />
+        <meshStandardMaterial color="#333333" />
+      </mesh>
 
-      <Ground/>
+      {/* Center line */}
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]}>
+        <planeGeometry args={[0.3, 50]} />
+        <meshStandardMaterial color="white" />
+      </mesh>
 
-      <Car/>
+      {/* Car */}
+      <Car />
 
       {/* Buildings */}
-      <Building x={-8} z={-5} height={6} color="cyan"/>
-      <Building x={8} z={-5} height={8} color="purple"/>
 
-      <Building x={-8} z={5} height={5} color="pink"/>
-      <Building x={8} z={5} height={10} color="blue"/>
+      <Building
+        x={-8}
+        z={-8}
+        height={8}
+        color="cyan"
+        label="Skills"
+      />
 
-      <OrbitControls/>
+      <Building
+        x={8}
+        z={-2}
+        height={10}
+        color="purple"
+        label="Projects"
+      />
 
+      <Building
+        x={-8}
+        z={6}
+        height={7}
+        color="hotpink"
+        label="GitHub"
+      />
+
+      <Building
+        x={8}
+        z={12}
+        height={9}
+        color="orange"
+        label="Certificates"
+      />
+
+      <OrbitControls />
     </Canvas>
-  )
+  );
 }
