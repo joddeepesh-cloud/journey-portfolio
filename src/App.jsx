@@ -1,107 +1,117 @@
-import { Canvas } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
-import { useGLTF, Text } from "@react-three/drei";
+import { Canvas } from "@react-three/fiber"
+import { OrbitControls, Text } from "@react-three/drei"
+import MovingCar from "./components/MovingCar"
 
-function Car() {
-  const { scene } = useGLTF("/models/car.glb");
-
+function Road() {
   return (
-    <primitive
-      object={scene}
-      scale={1.5}
-      position={[0, 0.5, 0]}
-      rotation={[0, Math.PI, 0]}
-    />
-  );
+    <>
+      {/* Ground */}
+      <mesh rotation={[-Math.PI/2,0,0]} position={[0,-0.2,0]}>
+        <planeGeometry args={[100,300]} />
+        <meshStandardMaterial color="#111"/>
+      </mesh>
+
+      {/* Road */}
+      <mesh rotation={[-Math.PI/2,0,0]} position={[0,-0.1,0]}>
+        <planeGeometry args={[8,300]} />
+        <meshStandardMaterial color="#333"/>
+      </mesh>
+
+      {/* Lane markings */}
+      {Array.from({length:15}).map((_,i)=>(
+        <mesh
+          key={i}
+          rotation={[-Math.PI/2,0,0]}
+          position={[0,0,i*20-140]}
+        >
+          <planeGeometry args={[0.3,8]} />
+          <meshStandardMaterial color="white"/>
+        </mesh>
+      ))}
+    </>
+  )
 }
 
-function Building({ x, z, height, color, label }) {
+function Zone({x,z,color,title}) {
   return (
-    <group position={[x, height / 2, z]}>
-      <mesh>
-        <boxGeometry args={[2, height, 2]} />
-        <meshStandardMaterial color={color} />
+    <group>
+      <mesh position={[x,2,z]}>
+        <boxGeometry args={[4,4,4]}/>
+        <meshStandardMaterial
+          color={color}
+          emissive={color}
+          emissiveIntensity={2}
+        />
       </mesh>
 
       <Text
-        position={[0, height / 2 + 1, 0]}
-        fontSize={0.5}
+        position={[x,5,z]}
+        fontSize={0.8}
         color="white"
         anchorX="center"
       >
-        {label}
+        {title}
       </Text>
     </group>
-  );
+  )
 }
 
 export default function App() {
   return (
-    <Canvas camera={{ position: [0, 8, 18], fov: 60 }}>
-      
-      {/* Background */}
-      <color attach="background" args={["#0d1117"]} />
+    <Canvas camera={{position:[0,3,8],fov:75}}>
 
-      {/* Lights */}
-      <ambientLight intensity={2} />
-      <directionalLight position={[5, 10, 5]} intensity={2} />
+      <ambientLight intensity={1}/>
 
-      {/* Ground */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]}>
-        <planeGeometry args={[50, 50]} />
-        <meshStandardMaterial color="#1f1f1f" />
-      </mesh>
-
-      {/* Road */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.01, 0]}>
-        <planeGeometry args={[6, 50]} />
-        <meshStandardMaterial color="#333333" />
-      </mesh>
-
-      {/* Center line */}
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0.02, 0]}>
-        <planeGeometry args={[0.3, 50]} />
-        <meshStandardMaterial color="white" />
-      </mesh>
-
-      {/* Car */}
-      <Car />
-
-      {/* Buildings */}
-
-      <Building
-        x={-8}
-        z={-8}
-        height={8}
+      <pointLight
+        position={[5,5,5]}
+        intensity={15}
         color="cyan"
-        label="Skills"
       />
 
-      <Building
-        x={8}
-        z={-2}
-        height={10}
+      <pointLight
+        position={[-5,5,5]}
+        intensity={15}
         color="purple"
-        label="Projects"
       />
 
-      <Building
+      <Road/>
+
+      <MovingCar/>
+
+      {/* Portfolio Zones */}
+
+      <Zone
         x={-8}
-        z={6}
-        height={7}
-        color="hotpink"
-        label="GitHub"
+        z={-20}
+        color="cyan"
+        title="Skills"
       />
 
-      <Building
+      <Zone
         x={8}
-        z={12}
-        height={9}
-        color="orange"
-        label="Certificates"
+        z={-40}
+        color="purple"
+        title="Projects"
       />
 
-      <OrbitControls />
+      <Zone
+        x={-8}
+        z={-60}
+        color="hotpink"
+        title="GitHub"
+      />
+
+      <Zone
+        x={8}
+        z={-80}
+        color="orange"
+        title="Certificates"
+      />
+
+      <OrbitControls
+        enablePan={false}
+      />
+
     </Canvas>
-  );
+  )
 }
