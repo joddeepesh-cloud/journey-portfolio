@@ -1,117 +1,117 @@
-import { Canvas } from "@react-three/fiber"
-import { OrbitControls, Text } from "@react-three/drei"
-import MovingCar from "./components/MovingCar"
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls, Text } from "@react-three/drei";
+import MovingCar from "./components/MovingCar";
+
+function Ground() {
+  return (
+    <mesh rotation={[-Math.PI / 2, 0, 0]}>
+      <planeGeometry args={[100, 100]} />
+      <meshStandardMaterial color="#0d0d0d" />
+    </mesh>
+  );
+}
 
 function Road() {
   return (
-    <>
-      {/* Ground */}
-      <mesh rotation={[-Math.PI/2,0,0]} position={[0,-0.2,0]}>
-        <planeGeometry args={[100,300]} />
-        <meshStandardMaterial color="#111"/>
+    <group>
+
+      {/* Main road */}
+      <mesh
+        rotation={[-Math.PI / 2, 0, 0]}
+        position={[0, 0.01, 0]}
+      >
+        <planeGeometry args={[8, 60]} />
+        <meshStandardMaterial color="#444" />
       </mesh>
 
-      {/* Road */}
-      <mesh rotation={[-Math.PI/2,0,0]} position={[0,-0.1,0]}>
-        <planeGeometry args={[8,300]} />
-        <meshStandardMaterial color="#333"/>
+      {/* White center line */}
+      <mesh
+        rotation={[-Math.PI / 2, 0, 0]}
+        position={[0, 0.02, 0]}
+      >
+        <planeGeometry args={[0.2, 60]} />
+        <meshStandardMaterial color="white" />
       </mesh>
 
-      {/* Lane markings */}
-      {Array.from({length:15}).map((_,i)=>(
-        <mesh
-          key={i}
-          rotation={[-Math.PI/2,0,0]}
-          position={[0,0,i*20-140]}
-        >
-          <planeGeometry args={[0.3,8]} />
-          <meshStandardMaterial color="white"/>
-        </mesh>
-      ))}
-    </>
-  )
+    </group>
+  );
 }
 
-function Zone({x,z,color,title}) {
+function District({ position, color, name }) {
   return (
-    <group>
-      <mesh position={[x,2,z]}>
-        <boxGeometry args={[4,4,4]}/>
+    <group position={position}>
+
+      {/* Building */}
+      <mesh position={[0, 3, 0]}>
+        <boxGeometry args={[5, 6, 5]} />
         <meshStandardMaterial
           color={color}
           emissive={color}
-          emissiveIntensity={2}
+          emissiveIntensity={1}
         />
       </mesh>
 
+      {/* Label */}
       <Text
-        position={[x,5,z]}
-        fontSize={0.8}
+        position={[0, 8, 0]}
+        fontSize={0.7}
         color="white"
         anchorX="center"
       >
-        {title}
+        {name}
       </Text>
+
     </group>
-  )
+  );
 }
 
 export default function App() {
   return (
-    <Canvas camera={{position:[0,3,8],fov:75}}>
+    <Canvas
+      camera={{
+        position: [0, 6, 15],
+        fov: 60
+      }}
+    >
+      <color attach="background" args={["#050816"]} />
 
-      <ambientLight intensity={1}/>
+      <ambientLight intensity={1} />
 
       <pointLight
-        position={[5,5,5]}
-        intensity={15}
-        color="cyan"
+        position={[10, 10, 10]}
+        intensity={30}
       />
 
-      <pointLight
-        position={[-5,5,5]}
-        intensity={15}
-        color="purple"
-      />
+      <Ground />
+      <Road />
 
-      <Road/>
-
-      <MovingCar/>
-
-      {/* Portfolio Zones */}
-
-      <Zone
-        x={-8}
-        z={-20}
-        color="cyan"
-        title="Skills"
-      />
-
-      <Zone
-        x={8}
-        z={-40}
-        color="purple"
-        title="Projects"
-      />
-
-      <Zone
-        x={-8}
-        z={-60}
+      <District
+        position={[-12,0,-15]}
         color="hotpink"
-        title="GitHub"
+        name="GitHub"
       />
 
-      <Zone
-        x={8}
-        z={-80}
+      <District
+        position={[12,0,-15]}
+        color="cyan"
+        name="Skills"
+      />
+
+      <District
+        position={[-12,0,15]}
         color="orange"
-        title="Certificates"
+        name="Projects"
       />
 
-      <OrbitControls
-        enablePan={false}
+      <District
+        position={[12,0,15]}
+        color="purple"
+        name="Certificates"
       />
 
+      <MovingCar />
+
+      <OrbitControls />
     </Canvas>
-  )
+  );
 }
