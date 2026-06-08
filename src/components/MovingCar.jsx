@@ -1,57 +1,80 @@
-import { useRef } from "react"
-import { useFrame, useThree } from "@react-three/fiber"
-import Car from "./Car"
+import { useRef, useEffect } from "react";
+import { useFrame, useThree } from "@react-three/fiber";
+import Car from "./Car";
 
 export default function MovingCar() {
-  const carRef = useRef()
-  const { camera } = useThree()
+  const carRef = useRef();
+  const { camera } = useThree();
 
   const keys = useRef({
     w: false,
     a: false,
     s: false,
     d: false,
-  })
+  });
 
-  window.onkeydown = (e) => {
-    keys.current[e.key.toLowerCase()] = true
-  }
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      const key = e.key.toLowerCase();
 
-  window.onkeyup = (e) => {
-    keys.current[e.key.toLowerCase()] = false
-  }
+      if (keys.current.hasOwnProperty(key)) {
+        keys.current[key] = true;
+      }
+    };
+
+    const handleKeyUp = (e) => {
+      const key = e.key.toLowerCase();
+
+      if (keys.current.hasOwnProperty(key)) {
+        keys.current[key] = false;
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    window.addEventListener("keyup", handleKeyUp);
+
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+      window.removeEventListener("keyup", handleKeyUp);
+    };
+  }, []);
 
   useFrame(() => {
-    if (!carRef.current) return
+    if (!carRef.current) return;
 
-    // WASD movement
-    if (keys.current.w)
-      carRef.current.position.z -= 0.1
+    const speed = 0.15;
 
-    if (keys.current.s)
-      carRef.current.position.z += 0.1
+    if (keys.current.w) {
+      carRef.current.position.z -= speed;
+    }
 
-    if (keys.current.a)
-      carRef.current.position.x -= 0.1
+    if (keys.current.s) {
+      carRef.current.position.z += speed;
+    }
 
-    if (keys.current.d)
-      carRef.current.position.x += 0.1
+    if (keys.current.a) {
+      carRef.current.position.x -= speed;
+    }
+
+    if (keys.current.d) {
+      carRef.current.position.x += speed;
+    }
 
     // Camera follows car
-    camera.position.x = carRef.current.position.x
-    camera.position.y = 3
-    camera.position.z = carRef.current.position.z + 8
+    camera.position.x = carRef.current.position.x;
+    camera.position.y = 12;
+    camera.position.z = carRef.current.position.z + 18;
 
     camera.lookAt(
       carRef.current.position.x,
       0,
       carRef.current.position.z
-    )
-  })
+    );
+  });
 
   return (
-    <group ref={carRef}>
+    <group ref={carRef} position={[0, 0.5, 0]}>
       <Car />
     </group>
-  )
+  );
 }
