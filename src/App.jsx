@@ -1,6 +1,21 @@
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Text } from "@react-three/drei";
 import MovingCar from "./components/MovingCar";
+import Gate from "./components/Gate";
+
+  function Building({ x, z, color, height }) {
+  return (
+    <mesh position={[x, height / 2, z]}>
+      <boxGeometry args={[4, height, 4]} />
+      <meshStandardMaterial
+        color={color}
+        emissive={color}
+        emissiveIntensity={0.8}
+      />
+    </mesh>
+  );
+}
+
 
 function Ground() {
   return (
@@ -171,6 +186,52 @@ export default function App() {
 
       <StreetLight x={-5} z={40} />
       <StreetLight x={5} z={40} />
+
+      {/* Gates */}
+
+      <Gate
+  position={[-25,0,-12]}
+  color="cyan"
+  title="Skill Street"
+/>
+
+<Gate
+  position={[25,0,-12]}
+  color="purple"
+  title="Project City"
+/>
+
+<Gate
+  position={[-25,0,28]}
+  color="orange"
+  title="Achievements"
+/>
+
+<Gate
+  position={[25,0,28]}
+  color="hotpink"
+  title="Fun Zone"
+/>
+
+{/* Skill Street Buildings */}
+<Building x={-28} z={-15} color="cyan" height={8} />
+<Building x={-20} z={-18} color="cyan" height={12} />
+<Building x={-22} z={-8} color="cyan" height={6} />
+
+{/* Project City Buildings */}
+<Building x={28} z={-15} color="purple" height={10} />
+<Building x={20} z={-18} color="purple" height={14} />
+<Building x={22} z={-8} color="purple" height={8} />
+
+{/* Achievement District Buildings */}
+<Building x={-28} z={20} color="orange" height={12} />
+<Building x={-20} z={25} color="orange" height={8} />
+<Building x={-24} z={32} color="orange" height={15} />
+
+{/* Fun Zone Buildings */}
+<Building x={28} z={20} color="hotpink" height={12} />
+<Building x={20} z={25} color="hotpink" height={8} />
+<Building x={24} z={32} color="hotpink" height={15} />
 
       <MovingCar />
 
