@@ -104,6 +104,56 @@ function MotivationBoard() {
   );
 }
 
+function DirectionBoard({ position, text, color }) {
+  return (
+    <group position={position}>
+      <mesh>
+        <boxGeometry args={[8, 3, 0.3]} />
+        <meshStandardMaterial
+          color={color}
+          emissive={color}
+          emissiveIntensity={1}
+        />
+      </mesh>
+
+      <Text
+        position={[0, 0, 0.2]}
+        fontSize={0.5}
+        color="white"
+        anchorX="center"
+      >
+        {text}
+      </Text>
+    </group>
+  )
+}
+
+function SkillTower({ x, z, color, label, height }) {
+  return (
+    <group>
+
+      <mesh position={[x, height / 2, z]}>
+        <boxGeometry args={[3, height, 3]} />
+        <meshStandardMaterial
+          color={color}
+          emissive={color}
+          emissiveIntensity={1}
+        />
+      </mesh>
+
+      <Text
+        position={[x, height + 2, z]}
+        fontSize={0.8}
+        color="white"
+        anchorX="center"
+      >
+        {label}
+      </Text>
+
+    </group>
+  )
+}
+
 export default function App() {
   return (
     <Canvas camera={{ position: [0, 12, 25], fov: 75 }}>
@@ -233,9 +283,84 @@ export default function App() {
 <Building x={20} z={25} color="hotpink" height={8} />
 <Building x={24} z={32} color="hotpink" height={15} />
 
+
+<DirectionBoard
+  position={[-20,4,-12]}
+  text="Skills Street"
+  color="cyan"
+/>
+
+<DirectionBoard
+  position={[20,4,-12]}
+  text="Projects City"
+  color="purple"
+/>
+
+<DirectionBoard
+  position={[-20,4,12]}
+  text="Achievement District"
+  color="orange"
+/>
+
+<DirectionBoard
+  position={[20,4,12]}
+  text="Fun Zone"
+  color="hotpink"
+/>
+
+{/* Skill Street Buildings */}
+
+<SkillTower
+  x={-35}
+  z={-15}
+  color="cyan"
+  label="React"
+  height={10}
+/>
+
+<SkillTower
+  x={-30}
+  z={-25}
+  color="yellow"
+  label="JavaScript"
+  height={14}
+/>
+
+<SkillTower
+  x={-20}
+  z={-20}
+  color="green"
+  label="Python"
+  height={12}
+/>
+
+<SkillTower
+  x={-25}
+  z={-35}
+  color="orange"
+  label="C++"
+  height={9}
+/>
+
+<SkillTower
+  x={-15}
+  z={-30}
+  color="hotpink"
+  label="Open Source"
+  height={16}
+/>
+
+<Text
+  position={[-25, 2, -10]}
+  fontSize={2}
+  color="cyan"
+>
+  Skills Street
+</Text>
+
       <MovingCar />
 
-      <OrbitControls />
+     { /* <OrbitControls /> */ }
     </Canvas>
   );
 }

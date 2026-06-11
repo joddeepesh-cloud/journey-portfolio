@@ -62,13 +62,13 @@ export default function MovingCar() {
 
     // Camera follows car
     camera.position.x = carRef.current.position.x;
-    camera.position.y = 12;
-    camera.position.z = carRef.current.position.z + 18;
+    camera.position.y = 20;
+    camera.position.z = carRef.current.position.z + 25;
 
     camera.lookAt(
       carRef.current.position.x,
-      0,
-      carRef.current.position.z
+      3,
+      carRef.current.position.z -10
     );
   });
 
