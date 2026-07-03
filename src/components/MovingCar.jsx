@@ -4,14 +4,19 @@ import Car from "./Car";
 
 export default function MovingCar() {
   const carRef = useRef();
+  const angle = useRef(0);
   const { camera } = useThree();
 
   const keys = useRef({
-    w: false,
-    a: false,
-    s: false,
-    d: false,
-  });
+  w: false,
+  a: false,
+  s: false,
+  d: false,
+  arrowup: false,
+  arrowdown: false,
+  arrowleft: false,
+  arrowright: false,
+});
 
   useEffect(() => {
     const handleKeyDown = (e) => {
@@ -44,21 +49,23 @@ export default function MovingCar() {
 
     const speed = 0.15;
 
-    if (keys.current.w) {
-      carRef.current.position.z -= speed;
-    }
+    if (keys.current.w || keys.current.arrowup) {
+  carRef.current.position.x -= Math.sin(angle.current) * speed
+  carRef.current.position.z -= Math.cos(angle.current) * speed
+}
 
-    if (keys.current.s) {
-      carRef.current.position.z += speed;
-    }
+if (keys.current.s || keys.current.arrowdown) {
+  carRef.current.position.x += Math.sin(angle.current) * speed
+  carRef.current.position.z += Math.cos(angle.current) * speed
+}
 
-    if (keys.current.a) {
-      carRef.current.position.x -= speed;
-    }
+    if (keys.current.a || keys.current.arrowleft)
+  angle.current += 0.04
 
-    if (keys.current.d) {
-      carRef.current.position.x += speed;
-    }
+if (keys.current.d || keys.current.arrowright)
+  angle.current -= 0.04
+
+carRef.current.rotation.y = angle.current
 
     // Camera follows car
     camera.position.x = carRef.current.position.x;
