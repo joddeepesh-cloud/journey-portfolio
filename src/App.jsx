@@ -51,9 +51,9 @@ function District({ position, color, name }) {
       </mesh>
 
       <Text
-        position={[0, 8, 0]}
-        fontSize={0.8}
-        color="white"
+        position={[0, 10, 0]}
+        fontSize={2}
+        color={color}
         anchorX="center"
       >
         {name}
@@ -151,6 +151,87 @@ function SkillTower({ x, z, color, label, height }) {
       </Text>
 
     </group>
+  )
+}
+function LaneMarking({ x, z, rotation }) {
+  return (
+    <mesh
+      rotation={rotation}
+      position={[x, 0.03, z]}
+    >
+      <planeGeometry args={[0.3, 3]} />
+      <meshStandardMaterial color="white" />
+    </mesh>
+  );
+}
+
+function TrafficLight({ x, z }) {
+  return (
+    <group position={[x,0,z]}>
+
+      <mesh position={[0,3,0]}>
+        <cylinderGeometry args={[0.15,0.15,6]} />
+        <meshStandardMaterial color="gray"/>
+      </mesh>
+
+      <mesh position={[0,6,0]}>
+        <sphereGeometry args={[0.3]} />
+        <meshStandardMaterial
+          color="red"
+          emissive="red"
+        />
+      </mesh>
+
+      <mesh position={[0,5.2,0]}>
+        <sphereGeometry args={[0.3]} />
+        <meshStandardMaterial
+          color="yellow"
+          emissive="yellow"
+        />
+      </mesh>
+
+      <mesh position={[0,4.4,0]}>
+        <sphereGeometry args={[0.3]} />
+        <meshStandardMaterial
+          color="green"
+          emissive="green"
+        />
+      </mesh>
+
+    </group>
+  );
+}
+
+function Tree({x,z}) {
+  return (
+    <group>
+
+      <mesh position={[x,2,z]}>
+        <cylinderGeometry args={[0.3,0.4,4]} />
+        <meshStandardMaterial color="#6b3f1d"/>
+      </mesh>
+
+      <mesh position={[x,5,z]}>
+        <sphereGeometry args={[2]} />
+        <meshStandardMaterial
+          color="green"
+        />
+      </mesh>
+
+    </group>
+  )
+}
+
+function WelcomeBoard() {
+  return (
+    <Text
+      position={[0,10,60]}
+      fontSize={3}
+      color="cyan"
+      anchorX="center"
+    >
+      Welcome to Deepesh City
+    </Text>
   )
 }
 
@@ -357,6 +438,56 @@ export default function App() {
 >
   Skills Street
 </Text>
+
+{/* Main Road Lane Markings */}
+
+{Array.from({ length: 20 }).map((_, i) => (
+  <LaneMarking
+    key={"main" + i}
+    x={0}
+    z={-55 + i * 6}
+    rotation={[-Math.PI / 2, 0, 0]}
+  />
+))}
+
+{/* Cross Road Top */}
+
+{Array.from({ length: 10 }).map((_, i) => (
+  <LaneMarking
+    key={"cross1" + i}
+    x={-27 + i * 6}
+    z={-20}
+    rotation={[-Math.PI / 2, 0, Math.PI / 2]}
+  />
+))}
+
+{/* Cross Road Bottom */}
+
+{Array.from({ length: 10 }).map((_, i) => (
+  <LaneMarking
+    key={"cross2" + i}
+    x={-27 + i * 6}
+    z={20}
+    rotation={[-Math.PI / 2, 0, Math.PI / 2]}
+  />
+))}
+
+<TrafficLight x={4} z={-20}/>
+<TrafficLight x={-4} z={-20}/>
+
+<TrafficLight x={4} z={20}/>
+<TrafficLight x={-4} z={20}/>
+
+<Tree x={-12} z={-40}/>
+<Tree x={12} z={-40}/>
+
+<Tree x={-12} z={0}/>
+<Tree x={12} z={0}/>
+
+<Tree x={-12} z={40}/>
+<Tree x={12} z={40}/>
+
+<WelcomeBoard/>
 
       <MovingCar />
 
